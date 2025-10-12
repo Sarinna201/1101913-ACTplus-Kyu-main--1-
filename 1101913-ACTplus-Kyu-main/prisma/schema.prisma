@@ -1,0 +1,355 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model activities {
+  id             Int       @id @default(autoincrement())
+  title          String
+  detail         String    @db.Text
+  imageUrl       String?
+  dateStart      DateTime
+  dateEnd        DateTime?
+  year           Int
+  term           Int
+  volunteerHours Int       @default(0)
+  authority      String
+  uid            Int
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  users              users                @relation(fields: [uid], references: [id])
+  participates       participates[]
+  activity_skills    activity_skills[]
+  user_skill_history user_skill_history[]
+  notifications      notifications[]
+
+  @@map("activities")
+}
+
+model assets {
+  id      Int         @id @default(autoincrement())
+  mid     Int
+  order   Int
+  type    assets_type
+  url     String      @db.VarChar(255)
+  modules modules     @relation(fields: [mid], references: [id], onDelete: Cascade, map: "assets_ibfk_1")
+
+  @@index([mid], map: "mid")
+}
+
+model courses {
+  id                  Int                   @id @default(autoincrement())
+  title               String                @db.VarChar(255)
+  description         String?               @db.Text
+  category            String?               @db.VarChar(100)
+  level               courses_level?
+  duration            String?               @db.VarChar(50)
+  instructor          Int? // เปลี่ยนจาก String เป็น FK -> users.id
+  rating              Decimal?              @db.Decimal(2, 1)
+  createdAt           DateTime?             @db.Date
+  contents            String                @db.LongText
+  enrollments_courses enrollments_courses[]
+  feedbacks           feedbacks[]
+  modules             modules[]
+  user                users?                @relation("CoursesInstructor", fields: [instructor], references: [id], map: "instuctor_id_fk")
+  course_skills       course_skills[]
+  module_progress     module_progress[]
+  certificates        certificates[] 
+
+  @@map("courses")
+}
+
+model modules {
+  id             Int      @id @default(autoincrement())
+  cid            Int
+  title          String   @db.VarChar(255)
+  summary        String?  @db.Text // เปลี่ยนจาก description -> summary ตาม SQL เดิม
+  order          Int
+  duration       String?  @db.VarChar(50)
+  contents       String?  @db.LongText
+  pre_test_quiz  String?  @db.LongText // JSON string สำหรับ pre-test questions
+  learning_video String?  @db.Text // URL ของวิดีโอ
+  test_quiz      String?  @db.LongText // JSON string สำหรับ test questions
+  assets         assets[]
+  courses        courses  @relation(fields: [cid], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "modules_ibfk_1")
+  module_progress module_progress[] 
+  quiz_attempts   quiz_attempts[]   
+
+  @@index([cid], map: "cid")
+}
+
+model module_progress {
+  id                Int       @id @default(autoincrement())
+  user_id           Int
+  module_id         Int
+  course_id         Int
+  pre_test_score    Int?      // คะแนน pre-test
+  pre_test_total    Int?      // คะแนนเต็ม pre-test
+  test_score        Int?      // คะแนน test
+  test_total        Int?      // คะแนนเต็ม test
+  video_completed   Boolean   @default(false)
+  completed         Boolean   @default(false)
+  completed_at      DateTime?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  users   users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  modules modules @relation(fields: [module_id], references: [id], onDelete: Cascade)
+  courses courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, module_id])
+  @@index([user_id, course_id])
+  @@map("module_progress")
+}
+
+model quiz_attempts {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  module_id   Int
+  quiz_type   quiz_type // 'pre_test' or 'test'
+  answers     String   @db.LongText // JSON string
+  score       Int
+  total       Int
+  passed      Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  users   users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  modules modules @relation(fields: [module_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, module_id])
+  @@map("quiz_attempts")
+}
+
+enum quiz_type {
+  pre_test
+  test
+}
+
+model participates {
+  id         Int               @id @default(autoincrement())
+  uid        Int
+  aid        Int
+  role       participates_role
+  checkedIn  Boolean           @default(false)
+  checkedAt  DateTime?
+  users      users             @relation(fields: [uid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "participates_ibfk_1")
+  activities activities        @relation(fields: [aid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "participates_ibfk_2")
+
+  @@unique([uid, aid, role], map: "uid")
+  @@index([aid], map: "aid")
+}
+
+model users {
+  id       Int     @id @default(autoincrement())
+  username String  @unique
+  email    String  @unique
+  password String
+  imageUrl String?
+  role     String  @default("student")
+
+  // Relations  
+  activities          activities[]
+  participates        participates[]
+  user_skills         user_skills[]
+  user_skill_history  user_skill_history[]
+  enrollments_courses enrollments_courses[]
+  feedbacks           feedbacks[]
+  notifications       notifications[]
+  courses             courses[]             @relation("CoursesInstructor") 
+  module_progress     module_progress[]     
+  quiz_attempts       quiz_attempts[]
+  certificates        certificates[]       
+  transcripts         transcripts[]  
+
+  @@map("users")
+}
+
+model enrollments_courses {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  course_id  Int
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "enrollments_courses_ibfk_1")
+  courses    courses   @relation(fields: [course_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "enrollments_courses_ibfk_2")
+
+  @@unique([user_id, course_id], map: "unique_enrollment")
+  @@index([course_id], map: "course_id")
+}
+
+model feedbacks {
+  id        Int       @id @default(autoincrement())
+  course_id Int
+  user_id   Int
+  comment   String?   @db.Text
+  star      Int       @db.TinyInt
+  createdAt DateTime? @default(now()) @db.DateTime(0)
+  courses   courses   @relation(fields: [course_id], references: [id], onDelete: Cascade, map: "feedbacks_ibfk_1")
+  users     users     @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "feedbacks_ibfk_2")
+
+  @@unique([course_id, user_id], map: "course_id")
+  @@index([user_id], map: "user_id")
+}
+
+// ===== Skills Models =====
+
+model skills {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique @db.VarChar(10)
+  name        String   @db.VarChar(255)
+  description String?  @db.Text
+  color       String   @default("#3B82F6") @db.VarChar(7)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  // Relations
+  activity_skills    activity_skills[]
+  user_skills        user_skills[]
+  user_skill_history user_skill_history[]
+  course_skills      course_skills[]
+
+  @@map("skills")
+}
+
+model activity_skills {
+  id          Int      @id @default(autoincrement())
+  activity_id Int
+  skill_id    Int
+  points      Int      @default(1)
+  created_at  DateTime @default(now())
+
+  activities activities @relation(fields: [activity_id], references: [id], onDelete: Cascade)
+  skills     skills     @relation(fields: [skill_id], references: [id], onDelete: Cascade)
+
+  @@unique([activity_id, skill_id])
+  @@map("activity_skills")
+}
+
+model user_skills {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  skill_id     Int
+  total_points Int      @default(0)
+  level        Int      @default(1)
+  last_updated DateTime @default(now()) @updatedAt
+
+  users  users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  skills skills @relation(fields: [skill_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, skill_id])
+  @@map("user_skills")
+}
+
+model user_skill_history {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  skill_id    Int
+  activity_id Int
+  points      Int
+  earned_at   DateTime @default(now())
+
+  users      users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  skills     skills     @relation(fields: [skill_id], references: [id], onDelete: Cascade)
+  activities activities @relation(fields: [activity_id], references: [id], onDelete: Cascade)
+
+  @@map("user_skill_history")
+}
+
+model course_skills {
+  id         Int      @id @default(autoincrement())
+  course_id  Int
+  skill_id   Int
+  points     Int      @default(1)
+  created_at DateTime @default(now())
+
+  courses courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  skills  skills  @relation(fields: [skill_id], references: [id], onDelete: Cascade)
+
+  @@unique([course_id, skill_id])
+  @@map("course_skills")
+}
+
+enum participates_role {
+  user
+  instructor
+  staff
+}
+
+enum assets_type {
+  image
+  pdf
+  markdown
+}
+
+enum courses_level {
+  Beginner
+  Intermediate
+  Advanced
+}
+
+model notifications {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  activity_id Int
+  type        String   @db.VarChar(50)
+  message     String   @db.Text
+  read        Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  users      users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  activities activities @relation(fields: [activity_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, read])
+  @@map("notifications")
+}
+
+model certificates {
+  id                Int       @id @default(autoincrement())
+  user_id           Int
+  course_id         Int
+  certificate_code  String    @unique @db.VarChar(50) // เลขที่ใบประกาศนียบัตร
+  issued_at         DateTime  @default(now())
+  completion_date   DateTime  // วันที่เรียนจบ
+  grade             String?   @db.VarChar(10) // เกรด เช่น A, B, C
+  score             Int?      // คะแนนรวม
+  instructor_name   String    @db.VarChar(255)
+  course_title      String    @db.VarChar(255)
+  
+  users   users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  courses courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([course_id])
+  @@map("certificates")
+}
+
+model transcripts {
+  id                Int       @id @default(autoincrement())
+  user_id           Int
+  transcript_code   String    @unique @db.VarChar(50)
+  generated_at      DateTime  @default(now())
+  valid_until       DateTime? // วันหมดอายุ (ถ้ามี)
+  purpose           String?   @db.Text // วัตถุประสงค์ เช่น "สมัครงาน", "กู้กยศ"
+  
+  // สรุปข้อมูล ณ เวลาที่สร้าง (เก็บเป็น snapshot)
+  total_courses     Int       @default(0)
+  completed_courses Int       @default(0)
+  total_activities  Int       @default(0)
+  total_volunteer_hours Int   @default(0)
+  total_skills      Int       @default(0)
+  
+  // เก็บข้อมูลแบบ JSON
+  courses_data      String    @db.LongText // JSON
+  activities_data   String    @db.LongText // JSON
+  skills_data       String    @db.LongText // JSON
+  
+  users   users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("transcripts")
+}
