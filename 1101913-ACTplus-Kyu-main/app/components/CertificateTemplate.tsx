@@ -34,7 +34,6 @@ export default function CertificateTemplate({
         logging: false,
         useCORS: true,
         backgroundColor: '#ffffff',
-        // ปิด advanced features
         allowTaint: true,
         foreignObjectRendering: false
       });
@@ -60,222 +59,397 @@ export default function CertificateTemplate({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Certificate Preview - ใช้ inline styles แทน Tailwind gradients */}
+    <div className="space-y-8">
+      {/* Certificate Preview */}
       <div 
         ref={certificateRef}
-        className="bg-white rounded-lg shadow-2xl overflow-hidden mx-auto"
+        className="bg-white rounded-2xl shadow-2xl overflow-hidden mx-auto"
         style={{
           width: '1190px',
           height: '842px',
           maxWidth: '100%'
         }}
       >
-        {/* Border */}
+        {/* Main Border with Orange Gradient */}
         <div 
           className="w-full h-full p-8 relative"
           style={{
-            border: '20px double rgb(79, 70, 229)' // RGB แทน Tailwind class
+            background: 'linear-gradient(135deg, rgb(249, 115, 22) 0%, rgb(234, 88, 12) 100%)',
+            padding: '16px'
           }}
         >
-          {/* Corner Decorations */}
+          {/* Inner White Container */}
           <div 
-            className="absolute top-6 left-6 w-16 h-16"
+            className="w-full h-full relative"
             style={{
-              borderTop: '4px solid rgb(234, 179, 8)',
-              borderLeft: '4px solid rgb(234, 179, 8)'
+              backgroundColor: 'white',
+              border: '8px solid rgb(31, 41, 55)',
+              boxShadow: 'inset 0 0 0 4px rgb(249, 115, 22)'
             }}
-          ></div>
-          <div 
-            className="absolute top-6 right-6 w-16 h-16"
-            style={{
-              borderTop: '4px solid rgb(234, 179, 8)',
-              borderRight: '4px solid rgb(234, 179, 8)'
-            }}
-          ></div>
-          <div 
-            className="absolute bottom-6 left-6 w-16 h-16"
-            style={{
-              borderBottom: '4px solid rgb(234, 179, 8)',
-              borderLeft: '4px solid rgb(234, 179, 8)'
-            }}
-          ></div>
-          <div 
-            className="absolute bottom-6 right-6 w-16 h-16"
-            style={{
-              borderBottom: '4px solid rgb(234, 179, 8)',
-              borderRight: '4px solid rgb(234, 179, 8)'
-            }}
-          ></div>
+          >
+            {/* Decorative Corner Elements */}
+            <div 
+              className="absolute"
+              style={{
+                top: '24px',
+                left: '24px',
+                width: '80px',
+                height: '80px',
+                borderTop: '6px solid rgb(249, 115, 22)',
+                borderLeft: '6px solid rgb(249, 115, 22)',
+                borderRadius: '4px 0 0 0'
+              }}
+            >
+              <div
+                className="absolute"
+                style={{
+                  top: '-3px',
+                  left: '-3px',
+                  width: '20px',
+                  height: '20px',
+                  backgroundColor: 'rgb(249, 115, 22)',
+                  borderRadius: '50%'
+                }}
+              ></div>
+            </div>
 
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-            {/* Header */}
-            <div className="space-y-2">
-              <div className="text-6xl mb-4">🎓</div>
-              <h1 
-                className="text-5xl font-serif font-bold"
-                style={{ color: 'rgb(55, 48, 163)' }}
-              >
-                Certificate of Completion
-              </h1>
+            <div 
+              className="absolute"
+              style={{
+                top: '24px',
+                right: '24px',
+                width: '80px',
+                height: '80px',
+                borderTop: '6px solid rgb(249, 115, 22)',
+                borderRight: '6px solid rgb(249, 115, 22)',
+                borderRadius: '0 4px 0 0'
+              }}
+            >
+              <div
+                className="absolute"
+                style={{
+                  top: '-3px',
+                  right: '-3px',
+                  width: '20px',
+                  height: '20px',
+                  backgroundColor: 'rgb(249, 115, 22)',
+                  borderRadius: '50%'
+                }}
+              ></div>
+            </div>
+
+            <div 
+              className="absolute"
+              style={{
+                bottom: '24px',
+                left: '24px',
+                width: '80px',
+                height: '80px',
+                borderBottom: '6px solid rgb(249, 115, 22)',
+                borderLeft: '6px solid rgb(249, 115, 22)',
+                borderRadius: '0 0 0 4px'
+              }}
+            >
+              <div
+                className="absolute"
+                style={{
+                  bottom: '-3px',
+                  left: '-3px',
+                  width: '20px',
+                  height: '20px',
+                  backgroundColor: 'rgb(249, 115, 22)',
+                  borderRadius: '50%'
+                }}
+              ></div>
+            </div>
+
+            <div 
+              className="absolute"
+              style={{
+                bottom: '24px',
+                right: '24px',
+                width: '80px',
+                height: '80px',
+                borderBottom: '6px solid rgb(249, 115, 22)',
+                borderRight: '6px solid rgb(249, 115, 22)',
+                borderRadius: '0 0 4px 0'
+              }}
+            >
+              <div
+                className="absolute"
+                style={{
+                  bottom: '-3px',
+                  right: '-3px',
+                  width: '20px',
+                  height: '20px',
+                  backgroundColor: 'rgb(249, 115, 22)',
+                  borderRadius: '50%'
+                }}
+              ></div>
+            </div>
+
+            {/* Content Container */}
+            <div className="flex flex-col items-center justify-center h-full text-center px-16 py-12">
+              {/* Logo & Header */}
+              <div className="mb-8">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div 
+                    className="text-6xl font-black"
+                    style={{ color: 'rgb(249, 115, 22)' }}
+                  >
+                    ACT
+                  </div>
+                  <div 
+                    className="text-6xl font-black"
+                    style={{
+                      color: 'rgb(31, 41, 55)',
+                      position: 'relative',
+                      top: '-8px'
+                    }}
+                  >
+                    +
+                  </div>
+                </div>
+                
+                <div 
+                  className="h-1 w-32 mx-auto mb-6"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent, rgb(249, 115, 22), transparent)'
+                  }}
+                ></div>
+
+                <h1 
+                  className="text-5xl font-bold mb-3"
+                  style={{ 
+                    color: 'rgb(31, 41, 55)',
+                    fontFamily: 'Georgia, serif',
+                    letterSpacing: '2px'
+                  }}
+                >
+                  CERTIFICATE OF COMPLETION
+                </h1>
+
+                <div className="flex items-center justify-center gap-2">
+                  <div 
+                    className="w-12 h-0.5"
+                    style={{ backgroundColor: 'rgb(249, 115, 22)' }}
+                  ></div>
+                  <div className="text-4xl">🎓</div>
+                  <div 
+                    className="w-12 h-0.5"
+                    style={{ backgroundColor: 'rgb(249, 115, 22)' }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* This is to certify */}
               <p 
-                className="text-lg font-serif italic"
+                className="text-xl font-serif italic mb-6"
                 style={{ color: 'rgb(107, 114, 128)' }}
               >
                 This is to certify that
               </p>
-            </div>
 
-            {/* Student Name */}
-            <div 
-              className="py-4 px-12"
-              style={{ borderBottom: '2px solid rgb(55, 48, 163)' }}
-            >
-              <h2 
-                className="text-4xl font-serif font-bold"
-                style={{ color: 'rgb(17, 24, 39)' }}
-              >
-                {studentName}
-              </h2>
-            </div>
-
-            {/* Course Info */}
-            <div className="space-y-2">
-              <p 
-                className="text-lg font-serif"
-                style={{ color: 'rgb(107, 114, 128)' }}
-              >
-                has successfully completed the course
-              </p>
-              <h3 
-                className="text-3xl font-serif font-semibold px-8"
-                style={{ color: 'rgb(55, 48, 163)' }}
-              >
-                {certificate.course_title}
-              </h3>
-            </div>
-
-            {/* Grade & Score - ใช้ RGB แทน gradient */}
-            <div className="flex items-center gap-8 text-center">
-              <div 
-                className="rounded-lg p-4"
-                style={{
-                  backgroundColor: 'rgb(254, 249, 195)',
-                  border: '2px solid rgb(234, 179, 8)'
-                }}
-              >
-                <div 
-                  className="text-sm mb-1"
-                  style={{ color: 'rgb(107, 114, 128)' }}
+              {/* Student Name */}
+              <div className="mb-8 relative">
+                <h2 
+                  className="text-5xl font-bold px-16 py-4"
+                  style={{ 
+                    color: 'rgb(249, 115, 22)',
+                    fontFamily: 'Georgia, serif',
+                    letterSpacing: '1px'
+                  }}
                 >
-                  Grade
-                </div>
+                  {studentName}
+                </h2>
                 <div 
-                  className="text-3xl font-bold"
-                  style={{ color: 'rgb(161, 98, 7)' }}
-                >
-                  {certificate.grade}
-                </div>
+                  className="absolute bottom-0 left-0 right-0 h-0.5"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent, rgb(31, 41, 55), transparent)'
+                  }}
+                ></div>
               </div>
-              <div 
-                className="rounded-lg p-4"
-                style={{
-                  backgroundColor: 'rgb(220, 252, 231)',
-                  border: '2px solid rgb(34, 197, 94)'
-                }}
-              >
-                <div 
-                  className="text-sm mb-1"
-                  style={{ color: 'rgb(107, 114, 128)' }}
-                >
-                  Score
-                </div>
-                <div 
-                  className="text-3xl font-bold"
-                  style={{ color: 'rgb(21, 128, 61)' }}
-                >
-                  {certificate.score}%
-                </div>
-              </div>
-            </div>
 
-            {/* Date & Signatures */}
-            <div className="flex items-end justify-between w-full px-12 mt-8">
-              <div className="text-left">
+              {/* Course Info */}
+              <div className="mb-8">
                 <p 
-                  className="text-sm mb-1"
+                  className="text-lg font-serif mb-4"
                   style={{ color: 'rgb(107, 114, 128)' }}
                 >
-                  Date of Completion
+                  has successfully completed the course
                 </p>
-                <p 
-                  className="text-lg font-semibold"
-                  style={{ color: 'rgb(17, 24, 39)' }}
-                >
-                  {new Date(certificate.completion_date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </p>
-              </div>
-
-              <div className="text-center">
                 <div 
-                  className="pt-2 px-8 mb-1"
-                  style={{ borderTop: '2px solid rgb(17, 24, 39)' }}
+                  className="px-12 py-4 rounded-xl"
+                  style={{
+                    backgroundColor: 'rgb(255, 247, 237)',
+                    border: '3px solid rgb(249, 115, 22)'
+                  }}
                 >
-                  <p 
-                    className="text-lg font-semibold"
-                    style={{ color: 'rgb(17, 24, 39)' }}
+                  <h3 
+                    className="text-3xl font-bold"
+                    style={{ 
+                      color: 'rgb(31, 41, 55)',
+                      fontFamily: 'Georgia, serif'
+                    }}
                   >
-                    {certificate.instructor_name}
+                    {certificate.course_title}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Grade & Score */}
+              <div className="flex items-center gap-8 mb-10">
+                <div 
+                  className="rounded-xl p-6 min-w-[140px]"
+                  style={{
+                    background: 'linear-gradient(135deg, rgb(249, 115, 22), rgb(234, 88, 12))',
+                    boxShadow: '0 10px 25px rgba(249, 115, 22, 0.3)'
+                  }}
+                >
+                  <div 
+                    className="text-sm font-bold mb-2 uppercase tracking-wider"
+                    style={{ color: 'rgba(255, 255, 255, 0.9)' }}
+                  >
+                    Grade
+                  </div>
+                  <div 
+                    className="text-4xl font-black"
+                    style={{ color: 'white' }}
+                  >
+                    {certificate.grade}
+                  </div>
+                </div>
+
+                <div className="text-4xl font-bold" style={{ color: 'rgb(209, 213, 219)' }}>|</div>
+
+                <div 
+                  className="rounded-xl p-6 min-w-[140px]"
+                  style={{
+                    backgroundColor: 'rgb(31, 41, 55)',
+                    border: '3px solid rgb(249, 115, 22)',
+                    boxShadow: '0 10px 25px rgba(31, 41, 55, 0.3)'
+                  }}
+                >
+                  <div 
+                    className="text-sm font-bold mb-2 uppercase tracking-wider"
+                    style={{ color: 'rgb(249, 115, 22)' }}
+                  >
+                    Score
+                  </div>
+                  <div 
+                    className="text-4xl font-black"
+                    style={{ color: 'white' }}
+                  >
+                    {certificate.score}%
+                  </div>
+                </div>
+              </div>
+
+              {/* Signatures & Info */}
+              <div className="flex items-end justify-between w-full mt-auto">
+                {/* Date */}
+                <div className="text-left">
+                  <p 
+                    className="text-xs uppercase tracking-wider font-bold mb-2"
+                    style={{ color: 'rgb(107, 114, 128)' }}
+                  >
+                    Date of Completion
+                  </p>
+                  <p 
+                    className="text-lg font-bold"
+                    style={{ color: 'rgb(31, 41, 55)' }}
+                  >
+                    {new Date(certificate.completion_date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
                   </p>
                 </div>
-                <p 
-                  className="text-sm"
-                  style={{ color: 'rgb(107, 114, 128)' }}
-                >
-                  Instructor
-                </p>
+
+                {/* Instructor Signature */}
+                <div className="text-center">
+                  <div 
+                    className="mb-2 pt-3 px-12"
+                    style={{ borderTop: '3px solid rgb(31, 41, 55)' }}
+                  >
+                    <p 
+                      className="text-xl font-bold"
+                      style={{ 
+                        color: 'rgb(31, 41, 55)',
+                        fontFamily: 'Brush Script MT, cursive'
+                      }}
+                    >
+                      {certificate.instructor_name}
+                    </p>
+                  </div>
+                  <p 
+                    className="text-xs uppercase tracking-wider font-bold"
+                    style={{ color: 'rgb(107, 114, 128)' }}
+                  >
+                    Course Instructor
+                  </p>
+                </div>
+
+                {/* Certificate ID */}
+                <div className="text-right">
+                  <p 
+                    className="text-xs uppercase tracking-wider font-bold mb-2"
+                    style={{ color: 'rgb(107, 114, 128)' }}
+                  >
+                    Certificate ID
+                  </p>
+                  <div 
+                    className="px-3 py-1 rounded"
+                    style={{
+                      backgroundColor: 'rgb(31, 41, 55)',
+                      display: 'inline-block'
+                    }}
+                  >
+                    <p 
+                      className="text-sm font-mono font-bold"
+                      style={{ color: 'rgb(249, 115, 22)' }}
+                    >
+                      {certificate.certificate_code}
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div className="text-right">
-                <p 
-                  className="text-sm mb-1"
-                  style={{ color: 'rgb(107, 114, 128)' }}
-                >
-                  Certificate ID
-                </p>
-                <p 
-                  className="text-lg font-mono font-semibold"
-                  style={{ color: 'rgb(17, 24, 39)' }}
-                >
-                  {certificate.certificate_code}
-                </p>
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="absolute bottom-12 left-0 right-0 text-center">
-              <p 
-                className="text-xs font-serif italic"
-                style={{ color: 'rgb(156, 163, 175)' }}
+              {/* Footer Verification */}
+              <div 
+                className="absolute bottom-6 left-0 right-0 text-center"
               >
-                Verify this certificate at: actplus.com/verify/{certificate.certificate_code}
-              </p>
+                <div 
+                  className="inline-block px-6 py-2 rounded-full"
+                  style={{
+                    backgroundColor: 'rgb(249, 250, 251)',
+                    border: '1px solid rgb(229, 231, 235)'
+                  }}
+                >
+                  <p 
+                    className="text-xs font-mono"
+                    style={{ color: 'rgb(107, 114, 128)' }}
+                  >
+                    🔒 Verify at: <span style={{ color: 'rgb(249, 115, 22)', fontWeight: 'bold' }}>actplus.com/verify/{certificate.certificate_code}</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-6">
         <button
           onClick={handleDownloadPDF}
-          className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition shadow-lg"
+          className="flex items-center gap-3 px-8 py-4 text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+          style={{
+            background: 'linear-gradient(135deg, rgb(249, 115, 22), rgb(234, 88, 12))'
+          }}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           Download PDF
@@ -283,12 +457,34 @@ export default function CertificateTemplate({
 
         <button
           onClick={() => window.print()}
-          className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition"
+          className="flex items-center gap-3 px-8 py-4 text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+          style={{
+            backgroundColor: 'rgb(31, 41, 55)'
+          }}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
           </svg>
-          Print
+          Print Certificate
+        </button>
+
+        <button
+          onClick={() => {
+            const url = `actplus.com/verify/${certificate.certificate_code}`;
+            navigator.clipboard.writeText(url);
+            alert('Verification link copied to clipboard!');
+          }}
+          className="flex items-center gap-3 px-8 py-4 font-bold rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          style={{
+            backgroundColor: 'white',
+            color: 'rgb(31, 41, 55)',
+            border: '2px solid rgb(229, 231, 235)'
+          }}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          Copy Verification Link
         </button>
       </div>
     </div>
