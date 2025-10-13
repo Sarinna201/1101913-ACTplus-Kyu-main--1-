@@ -62,7 +62,7 @@ function RatingBadge({ rating }: { rating?: number | null }) {
   return (
     <div className="flex items-center gap-1 bg-white px-2 py-1 rounded-full select-none">
       <span className="text-yellow-400">⭐</span>
-      <span className="text-sm font-semibold">{rating.toFixed(1)}</span>
+      <span className="text-sm font-semibold text-black">{rating.toFixed(1)}</span>
     </div>
   );
 }

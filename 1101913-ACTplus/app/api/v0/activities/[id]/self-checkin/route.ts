@@ -190,7 +190,8 @@ export async function POST(
 
       return {
         participation: updatedParticipation,
-        skillResult
+        skillResult,
+        volunteerHours: activity.volunteerHours
       };
     });
 
@@ -199,6 +200,7 @@ export async function POST(
       message: "Check-in successful!",
       checkedIn: result.participation.checkedIn,
       checkedAt: result.participation.checkedAt?.toISOString(),
+      volunteerHours: result.volunteerHours,
       skillsAwarded: result.skillResult.awarded,
       skills: result.skillResult.skills
     });

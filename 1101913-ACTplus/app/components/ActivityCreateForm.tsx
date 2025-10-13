@@ -175,7 +175,7 @@ export default function ActivityCreateForm({ onCancel, onSuccess }: ActivityCrea
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="text-gray-300"
+                  className="text-gray-900"
                 />
               </div>
             </section>

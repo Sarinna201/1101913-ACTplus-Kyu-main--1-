@@ -192,7 +192,7 @@ export default function CoursePage() {
     }
   };
 
-  // Level color mapping - using orange shades for levels
+  // ✅ เปลี่ยนสีเป็น orange
   const getLevelColor = (level: string) => {
     switch (level?.toLowerCase()) {
       case 'beginner': return 'bg-orange-100 text-orange-800';
@@ -300,7 +300,7 @@ export default function CoursePage() {
                   <span className="text-2xl">📂</span>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Class</p>
+                  <p className="text-sm text-gray-600">Category</p>
                   <p className="font-semibold text-black">{course.category}</p>
                 </div>
               </div>
@@ -322,101 +322,230 @@ export default function CoursePage() {
                   className="w-12 h-12 rounded-full object-cover border-2 border-orange-300"
                 />
                 <div>
-                  <p className="text-sm text-gray-600">Teacher</p>
+                  <p className="text-sm text-gray-600">Instructor</p>
                   <p className="font-semibold text-black">{course.instructorName}</p>
                 </div>
               </div>
             </div>
 
-            {/* Enroll / Unenroll Buttons */}
-            {!checkingEnrollment && (
-              <div className="mb-6">
-                {!isEnrolled ? (
-                  <button
-                    onClick={handleEnroll}
-                    disabled={enrolling}
-                    className="inline-block px-8 py-4 bg-orange-600 text-white text-lg font-semibold rounded-lg hover:bg-orange-700 transition shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {enrolling ? 'Enrolling...' : 'Enroll in this Course'}
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleUnenroll}
-                    disabled={enrolling}
-                    className="px-6 py-3 bg-gray-200 text-black rounded-lg hover:bg-gray-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Unenroll
-                  </button>
-                )}
-              </div>
+            {/* Progress Section - แสดงเฉพาะคนที่ enroll แล้ว */}
+            {isEnrolled && !canEdit && (
+              <CourseProgress courseId={course.id} isEnrolled={isEnrolled} />
             )}
 
             {/* Certificate Section */}
-            {certificate && (
-              <div className="p-4 bg-white border border-orange-300 rounded-lg mb-6">
-                <h3 className="text-lg font-semibold text-black mb-2">Your Certificate</h3>
-                <Link
-                  href={`/courses/${id}/certificate`}
-                  className="text-orange-600 hover:underline font-semibold"
-                >
-                  View your certificate
-                </Link>
-              </div>
-            )}
+            {isEnrolled && !canEdit && (
+              <div className="mb-8">
+                {certificate ? (
+                  // มี Certificate แล้ว
+                  <div className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 rounded-xl shadow-lg p-8 text-white">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="text-6xl">🏆</div>
+                        <div>
+                          <h3 className="text-2xl font-bold mb-2">
+                            Congratulations! You've earned a certificate
+                          </h3>
+                          <p className="text-yellow-100">
+                            Certificate ID: <span className="font-mono font-semibold">{certificate.certificate_code}</span>
+                          </p>
+                          <p className="text-yellow-100">
+                            Grade: <span className="font-bold">{certificate.grade}</span> |
+                            Score: <span className="font-bold">{certificate.score}%</span>
+                          </p>
+                        </div>
+                      </div>
 
-            {canRequestCertificate && (
-              <div className="mb-6">
-                <button
-                  onClick={handleRequestCertificate}
-                  disabled={generatingCert}
-                  className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {generatingCert ? 'Generating...' : 'Request Certificate'}
-                </button>
-              </div>
-            )}
-
-            {/* Course Progress */}
-{isEnrolled && (
-  <CourseProgress courseId={course.id} isEnrolled={isEnrolled} />
-)}
-            {/* Course Contents */}
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold text-black mb-4">Modules & Lessons</h2>
-              <div className="divide-y divide-gray-300 border border-gray-300 rounded-lg overflow-hidden">
-                {modules.map((module) => (
-                  <div
-                    key={module.id}
-                    className={`p-4 cursor-pointer bg-white hover:bg-orange-50 transition ${
-                      activeModule === module.id ? 'bg-orange-100' : ''
-                    }`}
-                    onClick={() =>
-                      setActiveModule(activeModule === module.id ? null : module.id)
-                    }
-                  >
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-semibold text-black">{module.title}</h3>
-                      <span className="text-sm text-gray-600">{module.duration || ''}</span>
+                      <a href={`/courses/${id}/certificate`}
+                        className="flex items-center gap-2 px-6 py-3 bg-white text-orange-600 font-semibold rounded-lg hover:bg-yellow-50 transition shadow-lg"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        View Certificate
+                      </a>
                     </div>
-                    {activeModule === module.id && (
-                      <p className="mt-2 text-gray-700 whitespace-pre-wrap">{module.contents}</p>
-                    )}
                   </div>
-                ))}
+                ) : canRequestCertificate ? (
+                  // สามารถขอ Certificate ได้
+                  <div className="bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500 rounded-xl shadow-lg p-8 text-white">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="text-6xl">🎉</div>
+                        <div>
+                          <h3 className="text-2xl font-bold mb-2">
+                            You're eligible for a certificate!
+                          </h3>
+                          <p className="text-green-100">
+                            You've completed all modules with a passing grade.
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={handleRequestCertificate}
+                        disabled={generatingCert}
+                        className="flex items-center gap-2 px-6 py-3 bg-white text-green-600 font-semibold rounded-lg hover:bg-green-50 transition shadow-lg disabled:opacity-50"
+                      >
+                        {generatingCert ? (
+                          <>
+                            <div className="animate-spin rounded-full h-5 w-5 border-2 border-green-600 border-t-transparent"></div>
+                            Generating...
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Get Certificate
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
               </div>
-            </div>
+            )}
 
-            {/* Skills Manager */}
-            <div className="mt-8">
-              <CourseSkillsManager courseId={course.id} canEdit={!!canEdit} />
-            </div>
-
-            {/* Feedback */}
-            <div className="mt-8">
-              <CourseFeedback courseId={course.id} isEnrolled={isEnrolled} />
+            {/* Course Contents */}
+            <div className="border-t pt-8">
+              <h2 className="text-2xl font-bold text-black mb-4">About This Course</h2>
+              <div
+                className="prose max-w-none text-gray-700"
+                dangerouslySetInnerHTML={{ __html: course.contents }}
+              />
             </div>
           </div>
         </div>
+
+        {/* Skills Section */}
+        <div className="mb-8">
+          <CourseSkillsManager
+            courseId={course.id}
+            canEdit={!!canEdit}
+          />
+        </div>
+
+        {/* Modules Section */}
+        {modules.length > 0 && (
+          <div className="bg-white rounded-xl shadow-lg border border-gray-300 p-8 mb-8">
+            <h2 className="text-2xl font-bold text-black mb-6">Course Modules</h2>
+
+            <div className="space-y-4">
+              {modules.map((module, index) => (
+                <div
+                  key={module.id}
+                  className="border border-gray-300 rounded-lg overflow-hidden"
+                >
+                  <div className="flex items-center justify-between p-6 hover:bg-orange-50 transition">
+                    <button
+                      onClick={() => setActiveModule(activeModule === module.id ? null : module.id)}
+                      className="flex items-start gap-4 flex-1 text-left"
+                    >
+                      <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="font-bold text-orange-600">{index + 1}</span>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg text-black mb-2">{module.title}</h3>
+                        {module.summary && (
+                          <p className="text-gray-600 text-sm mb-2">{module.summary}</p>
+                        )}
+                        {module.duration && (
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <span>⏱️</span>
+                            <span>{module.duration}</span>
+                          </div>
+                        )}
+                      </div>
+                      <svg
+                        className={`w-6 h-6 text-gray-400 transition-transform ${activeModule === module.id ? 'transform rotate-180' : ''
+                          }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {/* Edit Button for Instructor/Staff */}
+                    {canEdit && (
+                      <Link
+                        href={`/courses/${course.id}/modules/${module.id}/edit`}
+                        className="ml-4 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-sm font-medium"
+                      >
+                        Edit Content
+                      </Link>
+                    )}
+                  </div>
+
+                  {activeModule === module.id && module.contents && (
+                    <div className="border-t border-gray-300 p-6 bg-orange-50">
+                      <div
+                        className="prose max-w-none"
+                        dangerouslySetInnerHTML={{ __html: module.contents }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Feedback Section */}
+        <div className="mb-8">
+          <CourseFeedback
+            courseId={course.id}
+            isEnrolled={isEnrolled}
+          />
+        </div>
+
+        {/* Enroll Button */}
+        {!canEdit && (
+          <div className="mt-8">
+            {checkingEnrollment ? (
+              <div className="text-center">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+              </div>
+            ) : isEnrolled ? (
+              <div className="text-center space-y-4">
+                <div className="inline-flex items-center gap-2 px-6 py-3 bg-green-100 text-green-800 rounded-lg font-medium mb-4">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  You are enrolled in this course
+                </div>
+
+                <Link
+                  href={`/courses/${id}/learn`}
+                  className="inline-block px-8 py-4 bg-orange-600 text-white text-lg font-semibold rounded-lg hover:bg-orange-700 transition shadow-lg hover:shadow-xl"
+                >
+                  Start Learning →
+                </Link>
+
+                <div className="mt-4">
+                  <button
+                    onClick={handleUnenroll}
+                    disabled={enrolling}
+                    className="text-red-600 hover:text-red-700 text-sm underline disabled:opacity-50"
+                  >
+                    {enrolling ? 'Processing...' : 'Unenroll from course'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center">
+                <button
+                  onClick={handleEnroll}
+                  disabled={enrolling}
+                  className="px-8 py-4 bg-orange-600 text-white text-lg font-semibold rounded-lg hover:bg-orange-700 transition shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {enrolling ? 'Enrolling...' : 'Enroll in this Course'}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

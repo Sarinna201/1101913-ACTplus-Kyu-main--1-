@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
@@ -114,7 +114,7 @@ export default function EditCourseForm({ courseId, initialData }: EditCourseForm
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Title */}
       <div>
         <label className="block text-sm font-semibold text-black mb-2">
@@ -214,7 +214,7 @@ export default function EditCourseForm({ courseId, initialData }: EditCourseForm
             value={formData.contents}
             onChange={handleQuillChange}
             modules={modules}
-            className="bg-white"
+            className="bg-white text-black"
             style={{ minHeight: '300px' }}
           />
         </div>

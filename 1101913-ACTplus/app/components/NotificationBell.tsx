@@ -120,7 +120,7 @@ export default function NotificationBell() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100 transition"
+        className="relative p-2 text-white hover:text-black rounded-full hover:bg-gray-100 transition"
         aria-label="Notifications"
       >
         <svg

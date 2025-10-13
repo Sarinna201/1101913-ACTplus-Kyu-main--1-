@@ -167,7 +167,7 @@ export default function ActivitiesPage() {
 
   return (
     <>
-      <section className="max-w-6xl mx-auto p-4">
+      <section className="p-4 lg:p-10 bg-white text-gray-900">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Activities</h1>
           <div className="flex items-center gap-3">

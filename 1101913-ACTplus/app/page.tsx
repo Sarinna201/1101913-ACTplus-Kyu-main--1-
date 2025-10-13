@@ -104,7 +104,7 @@ export default function HomePage() {
       >
         <div className="relative max-w-6xl mx-auto px-4 py-24 text-center">
           <h1 className="text-5xl font-extrabold mb-6 leading-tight drop-shadow-lg">
-            Welcome To <span className="text-orange-400">ACT+</span>
+            Welcome To <span className="text-White">ACT+</span>
           </h1>
           <p className="text-xl mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow">
             platform for student development, learning, participation in activities and creating your learning records.

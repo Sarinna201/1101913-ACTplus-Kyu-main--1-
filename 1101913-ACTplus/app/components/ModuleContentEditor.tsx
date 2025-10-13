@@ -169,7 +169,7 @@ export default function ModuleContentEditor({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
       </div>
     );
   }
@@ -181,7 +181,7 @@ export default function ModuleContentEditor({
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+          className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
@@ -193,7 +193,7 @@ export default function ModuleContentEditor({
           onClick={() => setActiveTab('pretest')}
           className={`px-4 py-2 font-medium transition ${
             activeTab === 'pretest'
-              ? 'border-b-2 border-indigo-600 text-indigo-600'
+              ? 'border-b-2 border-orange-500 text-orange-500'
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
@@ -203,7 +203,7 @@ export default function ModuleContentEditor({
           onClick={() => setActiveTab('video')}
           className={`px-4 py-2 font-medium transition ${
             activeTab === 'video'
-              ? 'border-b-2 border-indigo-600 text-indigo-600'
+              ? 'border-b-2 border-orange-500 text-orange-500'
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
@@ -213,7 +213,7 @@ export default function ModuleContentEditor({
           onClick={() => setActiveTab('test')}
           className={`px-4 py-2 font-medium transition ${
             activeTab === 'test'
-              ? 'border-b-2 border-indigo-600 text-indigo-600'
+              ? 'border-b-2 border-orange-500 text-orange-500'
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
@@ -269,7 +269,7 @@ export default function ModuleContentEditor({
                 value={videoUrl}
                 onChange={(e) => setVideoUrl(e.target.value)}
                 placeholder="https://www.youtube.com/watch?v=..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
               />
               <p className="text-xs text-gray-500 mt-1">
                 Supports YouTube, Vimeo, and direct video URLs
@@ -360,7 +360,7 @@ function QuestionEditor({
             value={question.question}
             onChange={(e) => onUpdate(type, question.id, 'question', e.target.value)}
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
             placeholder="Enter your question..."
           />
         </div>
@@ -376,13 +376,13 @@ function QuestionEditor({
                   name={`correct-${question.id}`}
                   checked={question.correctAnswer === optIndex}
                   onChange={() => onUpdate(type, question.id, 'correctAnswer', optIndex)}
-                  className="w-4 h-4 text-indigo-600"
+                  className="w-4 h-4 text-orange-500"
                 />
                 <input
                   type="text"
                   value={option}
                   onChange={(e) => onUpdateOption(type, question.id, optIndex, e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                   placeholder={`Option ${optIndex + 1}`}
                 />
               </div>
@@ -402,7 +402,7 @@ function QuestionEditor({
             value={question.explanation || ''}
             onChange={(e) => onUpdate(type, question.id, 'explanation', e.target.value)}
             rows={2}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
             placeholder="Explain why this is the correct answer..."
           />
         </div>
