@@ -8,7 +8,7 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line
 } from "recharts";
 
-const COLORS = ["#f97316", "#6b7280", "#a1a1aa", "#374151", "#d4d4d8"];  // ส้ม + เฉดเทา‑ดำ
+const COLORS = ["#f97316", "#6b7280", "#a1a1aa", "#374151", "#d4d4d8"];  // ส้ม + เฉดเทา-ดำ
 
 type Skill = {
   id: number;
@@ -117,11 +117,11 @@ export default function Dashboard() {
       const studentsData = await studentsRes.json();
 
       setStats(statsData);
-      setTopSkills(skillsData.skills);
-      setParticipationRate(participationData.rate);
-      setCheckinStats(checkinData.stats);
-      setActivitiesPerMonth(monthData.data);
-      setTopStudents(studentsData.students);
+      setTopSkills(skillsData.skills || []);
+      setParticipationRate(participationData.rate || []);
+      setCheckinStats(checkinData.stats || []);
+      setActivitiesPerMonth(monthData.data || []);
+      setTopStudents(studentsData.students || []);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
       setError(error instanceof Error ? error.message : "Unknown error");
@@ -171,12 +171,19 @@ export default function Dashboard() {
     );
   }
 
+  // ✅ คำนวณ max value สำหรับ Y-axis
+  const maxActivityCount = Math.max(...activitiesPerMonth.map(m => m.count), 5);
+  const yAxisMax = Math.ceil(maxActivityCount / 5) * 5; // ปัดขึ้นเป็นทวีคูณของ 5
+
+  const maxParticipationRate = Math.max(...participationRate.map(r => r.rate), 100);
+
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-10">
       <h1 className="text-4xl font-bold text-gray-800 text-center mb-10">
         Dashboard Overview
       </h1>
 
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
         <StatCard
           icon="👨‍🎓"
@@ -204,6 +211,7 @@ export default function Dashboard() {
         />
       </div>
 
+      {/* Top Skills */}
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-10">
         <h2 className="text-xl font-bold text-orange-600 mb-4">
           Top 5 Skills in System
@@ -243,47 +251,63 @@ export default function Dashboard() {
         )}
       </div>
 
+      {/* Charts Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        {/* Activities per Month */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
           <h2 className="text-xl font-bold text-orange-600 mb-4">
             Activities per Month ({new Date().getFullYear()})
           </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={activitiesPerMonth}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="month" stroke="#6b7280" />
-              <YAxis stroke="#6b7280" />
-              <Tooltip />
-              <Bar dataKey="count" fill="#f97316" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          {activitiesPerMonth.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">No activity data available</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={activitiesPerMonth}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="month" stroke="#6b7280" />
+                <YAxis 
+                  stroke="#6b7280"
+                  domain={[0, yAxisMax]}
+                  ticks={Array.from({ length: (yAxisMax / 5) + 1 }, (_, i) => i * 5)}
+                />
+                <Tooltip />
+                <Bar dataKey="count" fill="#f97316" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
 
+        {/* Check-in Statistics */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
           <h2 className="text-xl font-bold text-orange-600 mb-4">
             Check‑in Statistics
           </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={checkinStats}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                label={(entry) => `${entry.name}: ${entry.value}`}
-              >
-                {checkinStats.map((_, idx) => (
-                  <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+          {checkinStats.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">No check-in data available</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={checkinStats}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  label={(entry) => `${entry.name}: ${entry.value}`}
+                >
+                  {checkinStats.map((_, idx) => (
+                    <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
 
+      {/* Participation Rate */}
       {participationRate.length > 0 && (
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-10">
           <h2 className="text-xl font-bold text-orange-600 mb-4">
@@ -293,7 +317,10 @@ export default function Dashboard() {
             <LineChart data={participationRate}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="term" stroke="#6b7280" />
-              <YAxis stroke="#6b7280" />
+              <YAxis 
+                stroke="#6b7280"
+                domain={[0, maxParticipationRate]}
+              />
               <Tooltip />
               <Legend />
               <Line 
@@ -309,6 +336,7 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Top Students by Volunteer Hours */}
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
         <h2 className="text-xl font-bold text-orange-600 mb-4">
           Top 10 Students by Volunteer Hours

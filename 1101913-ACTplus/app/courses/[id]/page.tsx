@@ -1,4 +1,5 @@
-// app/courses/[id]/page.tsx
+// app/courses/[id]/page.tsx - เพิ่มปุ่มลบ course
+
 'use client';
 
 import { useParams, useRouter } from "next/navigation";
@@ -45,6 +46,7 @@ export default function CoursePage() {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
   const [checkingEnrollment, setCheckingEnrollment] = useState(true);
+  const [deleting, setDeleting] = useState(false); // ✅ เพิ่ม
 
   const [certificate, setCertificate] = useState<any>(null);
   const [canRequestCertificate, setCanRequestCertificate] = useState(false);
@@ -192,7 +194,33 @@ export default function CoursePage() {
     }
   };
 
-  // ✅ เปลี่ยนสีเป็น orange
+  // ✅ เพิ่มฟังก์ชันลบ course
+  const handleDeleteCourse = async () => {
+    if (!confirm(`Are you sure you want to delete "${course?.title}"?\n\nThis action cannot be undone and will delete:\n• All modules\n• All enrollments\n• All progress data\n• All certificates`)) {
+      return;
+    }
+
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/v0/courses/${id}`, {
+        method: 'DELETE'
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        alert('Course deleted successfully');
+        router.push('/courses');
+      } else {
+        alert(data.error || 'Failed to delete course');
+      }
+    } catch (error) {
+      console.error('Error deleting course:', error);
+      alert('An error occurred while deleting the course');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const getLevelColor = (level: string) => {
     switch (level?.toLowerCase()) {
       case 'beginner': return 'bg-orange-100 text-orange-800';
@@ -268,17 +296,40 @@ export default function CoursePage() {
               <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getLevelColor(course.level)}`}>
                 {course.level}
               </span>
-              {/* Edit Button */}
+
+              {/* ✅ Action Buttons for Instructor/Staff */}
               {canEdit && (
-                <Link
-                  href={`/courses/${course.id}/edit`}
-                  className="flex items-center gap-2 px-4 py-2 bg-white text-orange-700 rounded-lg hover:bg-orange-50 transition font-semibold"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  Edit Course
-                </Link>
+                <div className="flex items-center gap-3">
+                  <Link
+                    href={`/courses/${course.id}/edit`}
+                    className="flex items-center gap-2 px-4 py-2 bg-white text-orange-700 rounded-lg hover:bg-orange-50 transition font-semibold"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Edit Course
+                  </Link>
+
+                  <button
+                    onClick={handleDeleteCourse}
+                    disabled={deleting}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {deleting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                        Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete Course
+                      </>
+                    )}
+                  </button>
+                </div>
               )}
 
               {course.rating && (

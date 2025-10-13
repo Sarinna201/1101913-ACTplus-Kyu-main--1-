@@ -74,17 +74,19 @@ export default function CourseLearnPage() {
 
             setIsEnrolled(true);
 
-            // Fetch course
+            // ✅ Fetch course with modules
             const courseRes = await fetch(`/api/v0/courses/${id}`);
             const courseData = await courseRes.json();
 
             if (courseData.success) {
                 setCourse(courseData.course);
-                
-                // Sort modules by order
-                const sortedModules = (courseData.course.modules || []).sort(
+
+                // ✅ ใช้ modules จาก courseData.modules แทน courseData.course.modules
+                const sortedModules = (courseData.modules || []).sort(
                     (a: Module, b: Module) => a.order - b.order
                 );
+
+                console.log('Fetched modules:', sortedModules); // ✅ Debug
                 setModules(sortedModules);
 
                 // Auto-select first module
@@ -340,18 +342,16 @@ export default function CourseLearnPage() {
                                     <button
                                         key={module.id}
                                         onClick={() => loadModuleContent(module)}
-                                        className={`w-full text-left p-3 rounded-lg transition ${
-                                            selectedModule?.id === module.id
+                                        className={`w-full text-left p-3 rounded-lg transition ${selectedModule?.id === module.id
                                                 ? 'bg-indigo-100 border-2 border-indigo-500'
                                                 : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
-                                        }`}
+                                            }`}
                                     >
                                         <div className="flex items-start gap-3">
-                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                                selectedModule?.id === module.id
+                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${selectedModule?.id === module.id
                                                     ? 'bg-indigo-600 text-white'
                                                     : 'bg-gray-300 text-gray-600'
-                                            }`}>
+                                                }`}>
                                                 {index + 1}
                                             </div>
                                             <div className="flex-1 min-w-0">
@@ -387,13 +387,12 @@ export default function CourseLearnPage() {
                                     {['pretest', 'video', 'test', 'complete'].map((step, idx) => (
                                         <div key={step} className="flex items-center flex-1">
                                             <div className="flex flex-col items-center flex-1">
-                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                                                    currentStep === step
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${currentStep === step
                                                         ? 'bg-indigo-600 text-white'
                                                         : idx < ['pretest', 'video', 'test', 'complete'].indexOf(currentStep)
-                                                        ? 'bg-green-500 text-white'
-                                                        : 'bg-gray-200 text-gray-500'
-                                                }`}>
+                                                            ? 'bg-green-500 text-white'
+                                                            : 'bg-gray-200 text-gray-500'
+                                                    }`}>
                                                     {idx < ['pretest', 'video', 'test', 'complete'].indexOf(currentStep) ? '✓' : idx + 1}
                                                 </div>
                                                 <span className="text-xs mt-2 font-medium capitalize">
@@ -401,11 +400,10 @@ export default function CourseLearnPage() {
                                                 </span>
                                             </div>
                                             {idx < 3 && (
-                                                <div className={`h-1 flex-1 ${
-                                                    idx < ['pretest', 'video', 'test', 'complete'].indexOf(currentStep)
+                                                <div className={`h-1 flex-1 ${idx < ['pretest', 'video', 'test', 'complete'].indexOf(currentStep)
                                                         ? 'bg-green-500'
                                                         : 'bg-gray-200'
-                                                }`} />
+                                                    }`} />
                                             )}
                                         </div>
                                     ))}
@@ -561,19 +559,16 @@ function QuizSection({
                             {question.options.map((option, optIdx) => (
                                 <label
                                     key={optIdx}
-                                    className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition ${
-                                        answers[question.id] === optIdx
+                                    className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition ${answers[question.id] === optIdx
                                             ? 'border-indigo-500 bg-indigo-50'
                                             : 'border-gray-200 hover:bg-gray-50'
-                                    } ${
-                                        showResults && optIdx === question.correctAnswer
+                                        } ${showResults && optIdx === question.correctAnswer
                                             ? 'border-green-500 bg-green-50'
                                             : ''
-                                    } ${
-                                        showResults && answers[question.id] === optIdx && optIdx !== question.correctAnswer
+                                        } ${showResults && answers[question.id] === optIdx && optIdx !== question.correctAnswer
                                             ? 'border-red-500 bg-red-50'
                                             : ''
-                                    }`}
+                                        }`}
                                 >
                                     <input
                                         type="radio"
@@ -613,9 +608,8 @@ function QuizSection({
             )}
 
             {showResults && score !== null && (
-                <div className={`mt-6 p-4 rounded-lg ${
-                    (score / questions.length) >= 0.7 ? 'bg-green-100' : 'bg-yellow-100'
-                }`}>
+                <div className={`mt-6 p-4 rounded-lg ${(score / questions.length) >= 0.7 ? 'bg-green-100' : 'bg-yellow-100'
+                    }`}>
                     <p className="text-center font-bold">
                         Your Score: {score}/{questions.length} ({Math.round((score / questions.length) * 100)}%)
                     </p>
