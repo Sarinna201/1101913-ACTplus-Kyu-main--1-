@@ -117,9 +117,6 @@ export default function TranscriptTemplate({
           fontSize: 9,
           textColor: [31, 41, 55]
         },
-        alternateRowStyles: {
-          fillColor: [255, 247, 237] // Light orange
-        },
         margin: { left: 15, right: 15 }
       });
 
@@ -168,9 +165,6 @@ export default function TranscriptTemplate({
             styles: { 
               fontSize: 8,
               textColor: [31, 41, 55]
-            },
-            alternateRowStyles: {
-              fillColor: [249, 250, 251] // Light gray
             },
             margin: { left: 15, right: 15 },
             columnStyles: {
@@ -224,9 +218,6 @@ export default function TranscriptTemplate({
           styles: { 
             fontSize: 8,
             textColor: [31, 41, 55]
-          },
-          alternateRowStyles: {
-            fillColor: [249, 250, 251]
           },
           margin: { left: 15, right: 15 },
           columnStyles: {
@@ -285,9 +276,6 @@ export default function TranscriptTemplate({
           styles: { 
             fontSize: 8,
             textColor: [31, 41, 55]
-          },
-          alternateRowStyles: {
-            fillColor: [249, 250, 251]
           },
           margin: { left: 15, right: 15 },
           columnStyles: {
