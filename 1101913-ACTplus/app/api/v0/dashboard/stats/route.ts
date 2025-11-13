@@ -18,7 +18,7 @@ export async function GET() {
 
     // นับจำนวนนักศึกษา
     const totalStudents = await prisma.users.count({
-      where: { role: "student" }
+      where: { role: "user" }
     });
 
     // นับจำนวนกิจกรรมทั้งหมด

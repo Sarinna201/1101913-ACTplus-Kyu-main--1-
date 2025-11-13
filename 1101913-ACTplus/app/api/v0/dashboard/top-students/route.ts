@@ -17,8 +17,8 @@ export async function GET() {
     }
 
     // หา top 10 นักศึกษาที่มีชั่วโมงจิตอาสามากที่สุด
-    const students = await prisma.users.findMany({
-      where: { role: "student" },
+    const users = await prisma.users.findMany({
+      where: { role: "user" },
       select: {
         id: true,
         username: true,
@@ -33,7 +33,7 @@ export async function GET() {
       }
     });
 
-    const studentsWithHours = students.map(student => {
+    const studentsWithHours = users.map(student => {
       const totalHours = student.participates.reduce(
         (sum, p) => sum + p.activities.volunteerHours, 
         0

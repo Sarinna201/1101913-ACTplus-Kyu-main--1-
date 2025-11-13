@@ -78,12 +78,12 @@ export default function MyCertificatesPage() {
                 certificates.length > 0
                   ? `${Math.round(certificates.reduce((sum, c) => sum + c.score, 0) / certificates.length)}%`
                   : '0%'
-            },
+            }/*,
             {
               icon: '📄',
               label: 'Grade B+',
-              value: certificates.filter(c => c.score >= 80).length
-            }
+              value: certificates.filter(c => c.score >= 80 && c.score <= 90).length
+            }*/
           ].map((stat, idx) => (
             <div key={idx} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center gap-4">

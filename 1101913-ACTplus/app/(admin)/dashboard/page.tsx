@@ -197,12 +197,12 @@ export default function Dashboard() {
           value={stats.totalActivities}
           bgColor="bg-gradient-to-br from-gray-500 to-gray-700"
         />
-        <StatCard
+        {/*<StatCard
           icon="⏱️"
           title="Volunteer Hours"
           value={stats.totalVolunteerHours}
           bgColor="bg-gradient-to-br from-gray-400 to-gray-600"
-        />
+        />*/}
         <StatCard
           icon="🎯"
           title="Ongoing Activities"
